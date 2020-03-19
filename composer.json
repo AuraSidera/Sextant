@@ -1,0 +1,21 @@
+{
+    "name": "aura/sextant",
+    "description": "Flexible and unopinionated PHP routing library.",
+    "type": "library",    
+    "version": "1.0.0",
+    "authors": [{
+        "name": "Marco Zanella",
+        "email": "marco.zanella.1991@gmail.com"
+    }],
+    "license": [
+        "GPL-3.0-or-later"
+    ],
+    "require": {
+      "php": ">=7.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Aura\\": "src"
+        }
+    }
+} 
