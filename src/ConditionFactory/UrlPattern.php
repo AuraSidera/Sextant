@@ -2,7 +2,7 @@
 /**
  * Matches an URL pattern.
  */
-namespace Aura\Sextant\ConditionFactory;
+namespace AuraSidera\Sextant\ConditionFactory;
 
 require_once __DIR__ . '/ConditionFactory.php';
 

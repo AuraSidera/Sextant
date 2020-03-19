@@ -2,7 +2,7 @@
 /**
  * Non-intrusive routing library for PHP.
  */
-namespace Aura\Sextant;
+namespace AuraSidera\Sextant;
 
 require_once __DIR__ . '/ConditionFactory/Always.php';
 require_once __DIR__ . '/ActionFactory/Nothing.php';

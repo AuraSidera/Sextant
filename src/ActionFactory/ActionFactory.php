@@ -2,7 +2,7 @@
 /**
  * Abstract factory for actions.
  */
-namespace Aura\Sextant\ActionFactory;
+namespace AuraSidera\Sextant\ActionFactory;
 
 /**
  * Abstract factory for actions.

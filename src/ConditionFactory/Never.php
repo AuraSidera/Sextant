@@ -2,7 +2,7 @@
 /**
  * A condition which is never satisfied.
  */
-namespace Aura\Sextant\ConditionFactory;
+namespace AuraSidera\Sextant\ConditionFactory;
 
 require_once __DIR__ . '/ConditionFactory.php';
 

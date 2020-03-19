@@ -2,7 +2,7 @@
 /**
  * Outputs a string.
  */
-namespace Aura\Sextant\ActionFactory;
+namespace AuraSidera\Sextant\ActionFactory;
 
 require_once __DIR__ . '/ActionFactory.php';
 

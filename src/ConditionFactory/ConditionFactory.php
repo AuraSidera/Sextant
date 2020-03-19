@@ -2,7 +2,7 @@
 /**
  * Abstract Factory for a condition.
  */
-namespace Aura\Sextant\ConditionFactory;
+namespace AuraSidera\Sextant\ConditionFactory;
 
 /**
  * Abstract Factory for a condition.
