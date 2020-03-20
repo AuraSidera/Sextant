@@ -176,6 +176,11 @@ class Router {
         }
         if (is_null($parameters)) {
             $parameters = isset($_REQUEST) ? $_REQUEST : [];
+            if ($method === 'PUT') {
+                $put_parameters = [];
+                parse_str(file_get_contents("php://input"), $put_parameters);
+                $parameters = array_merge($parameters, $put_parameters);
+            }
         }
         if (is_null($headers)) {
             if (function_exists('getallheaders') && getallheaders() !== false) {
