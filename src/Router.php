@@ -169,7 +169,7 @@ class Router {
     ): self {
         // Initializes parameters
         if (is_null($url)) {
-            $url = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '';
+            $url = isset($_SERVER['REQUEST_URI']) ? strtok($_SERVER['REQUEST_URI'], '?') : '';
         }
         if (is_null($method)) {
             $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
