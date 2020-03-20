@@ -178,7 +178,17 @@ class Router {
             $parameters = isset($_REQUEST) ? $_REQUEST : [];
         }
         if (is_null($headers)) {
-            $headers = (function_exists('getallheaders') && getallheaders() !== false) ? getallheaders() : [];
+            if (function_exists('getallheaders') && getallheaders() !== false) {
+                $headers = getallheaders();
+            }
+            else {
+                $headers = [];
+                foreach($_SERVER as $name => $value) {
+                if ($name != 'HTTP_MOD_REWRITE' && (substr($name, 0, 5) == 'HTTP_' || $name == 'CONTENT_LENGTH' || $name == 'CONTENT_TYPE')) {
+                    $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', str_replace('HTTP_', '', $name)))));
+                    $headers[$name] = $value;
+                }
+            }
         }
 
         // Tests every route
