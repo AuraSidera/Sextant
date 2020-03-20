@@ -180,14 +180,18 @@ class Router {
         if (is_null($headers)) {
             if (function_exists('getallheaders') && getallheaders() !== false) {
                 $headers = getallheaders();
+            }   
+            elseif (isset($_SERVER)) {
+                $headers = [];
+                foreach($_SERVER as $name => $value) {
+                    if ($name != 'HTTP_MOD_REWRITE' && (substr($name, 0, 5) == 'HTTP_' || $name == 'CONTENT_LENGTH' || $name == 'CONTENT_TYPE')) {
+                        $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', str_replace('HTTP_', '', $name)))));
+                        $headers[$name] = $value;
+                    }
+                }
             }
             else {
                 $headers = [];
-                foreach($_SERVER as $name => $value) {
-                if ($name != 'HTTP_MOD_REWRITE' && (substr($name, 0, 5) == 'HTTP_' || $name == 'CONTENT_LENGTH' || $name == 'CONTENT_TYPE')) {
-                    $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', str_replace('HTTP_', '', $name)))));
-                    $headers[$name] = $value;
-                }
             }
         }
 
