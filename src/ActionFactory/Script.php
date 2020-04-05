@@ -23,11 +23,12 @@ class Script implements ActionFactory {
         }
 
         return function (
-            array $matches = [],
-            array $parameters = [],
-            array $headers = [],
-            string $url = '',
-            string $method = ''
+            array &$matches = [],
+            array &$parameters = [],
+            array &$headers = [],
+            string &$url = '',
+            string &$method = '',
+            &$status = null
         ) use ($file_path) {
             include $file_path;
         };
