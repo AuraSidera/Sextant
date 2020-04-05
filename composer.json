@@ -2,7 +2,6 @@
     "name": "aurasidera/sextant",
     "description": "Flexible and unopinionated PHP routing library.",
     "type": "library",    
-    "version": "1.0.0",
     "authors": [{
         "name": "Marco Zanella",
         "email": "marco.zanella.1991@gmail.com"
