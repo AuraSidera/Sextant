@@ -3,8 +3,7 @@
  * Disjunction of conditions.
  */
 namespace AuraSidera\Sextant\ConditionFactory;
-
-require_once __DIR__ . '/ConditionFactory.php';
+use \AuraSidera\Sextant\State;
 
 /**
  * Disjunction of conditions.
@@ -17,15 +16,9 @@ class Disjunction implements ConditionFactory {
      * @return Disjunction condition
      */
     public function __invoke(callable ...$subjects): callable {
-        return function(
-            string $url = '',
-            string $method = '',
-            array $parameters = [],
-            array $headers = [],
-            array &$matches = []
-        ) use ($subjects): bool {
+        return function(State $state) use ($subjects): bool {
             foreach ($subjects as $subject) {
-                if ($subject($url, $method, $parameters, $headers, $matches)) {
+                if ($subject($state)) {
                     return true;
                 }
             }

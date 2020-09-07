@@ -3,8 +3,8 @@
  * Condition based on a PCRE on URL.
  */
 namespace AuraSidera\Sextant\ConditionFactory;
-
-require_once __DIR__ . '/ConditionFactory.php';
+use \AuraSidera\Sextant\State;
+use \Exception;
 
 /**
  * Condition based on a PCRE on URL.
@@ -19,16 +19,14 @@ class Pcre implements ConditionFactory {
      * @return Condition based on a PCRE match
      */
     public function __invoke(string $url_pattern = ''): callable {
-        return function(
-            string $url = '',
-            string $method = '',
-            array $parameters = [],
-            array $headers = [],
-            array &$matches = []
-        ) use ($url_pattern): bool {
-            $result = preg_match($url_pattern, $url, $matches);
+        return function(State $state) use ($url_pattern): bool {
+            $matches = [];
+            $result = preg_match($url_pattern, $state->getUrl(), $matches);
             if ($result === false) {
-                throw new \Exception('Error while trying to match "'. $url . '" againts pattern "' . $url_pattern . '".');
+                throw new Exception('Error while trying to match "'. $state->getUrl() . '" againts pattern "' . $url_pattern . '".');
+            }
+            for ($i = 0; $i < \count($matches); ++$i) {
+                $state->addMatch($i, $matches[$i]);
             }
 
             return $result === 1;

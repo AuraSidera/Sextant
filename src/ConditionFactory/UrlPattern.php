@@ -3,8 +3,8 @@
  * Matches an URL pattern.
  */
 namespace AuraSidera\Sextant\ConditionFactory;
-
-require_once __DIR__ . '/ConditionFactory.php';
+use \AuraSidera\Sextant\State;
+use \Exception;
 
 /**
  * Matches an URL pattern.
@@ -57,12 +57,12 @@ class UrlPattern implements ConditionFactory {
         // Finds placeholders
         $result = preg_match_all('/{((\w+)(:(\w+))?)}/', $url_pattern, $matches);
         if ($result === false) {
-            throw new \Exception('Error while processing pattern "'. $url_pattern . '".');
+            throw new Exception('Error while processing pattern "'. $url_pattern . '".');
         }
 
         // Replaces placeholders
         $placeholders = array_key_exists(2, $matches) ? $matches[2] : [];
-        foreach ($placeholders as $index => $name) {
+        foreach (array_keys($placeholders) as $index) {
             $processed_pattern = str_replace(
                 $matches[0][$index],
                 '(' . self::typePattern($matches[4][$index]) . ')',
@@ -71,21 +71,15 @@ class UrlPattern implements ConditionFactory {
         }
 
         // Returns closure
-        return function(
-            string $url = '',
-            string $method = '',
-            array $parameters = [],
-            array $headers = [],
-            array &$matches = []
-        ) use ($processed_pattern, $placeholders): bool {
+        return function(State $state) use ($processed_pattern, $placeholders): bool {
             $local_matches = [];
-            $result = preg_match($processed_pattern, $url, $local_matches);
+            $result = preg_match($processed_pattern, $state->getUrl(), $local_matches);
             if ($result === false) {
-                throw new \Exception('Error while trying to match "'. $url . '" againts pattern "' . $processed_pattern . '".');
+                throw new Exception('Error while trying to match "'. $state->getUrl() . '" againts pattern "' . $processed_pattern . '".');
             }
 
             $matches = [];
-            for ($i = 1; $i < count($local_matches); ++$i) {
+            for ($i = 1; $i < \count($local_matches); ++$i) {
                 $matches[$placeholders[$i - 1]] = $local_matches[$i];
             }
 

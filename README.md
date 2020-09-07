@@ -24,10 +24,14 @@ Add `aura/sextant` to your `composer.json` file, or run:
 ## Manual
 Clone or download this repository:
 
-    git clone git@github.com:PhpAura/Sextant.git
+```bash
+git clone https://github.com/AuraSidera/Sextant.git
+```
 or
 
-    wget https://github.com/PhpAura/Sextant/archive/master.zip
+```bash
+wget https://github.com/AuraSidera/Sextant/archive/master.zip
+```
 File structure adheres to PSR-4: no big surprises when including files.
 
 
@@ -37,15 +41,18 @@ For most applications you will just need some mechanism to associate actions to 
 
 ```php
 // Initializes just a couple of stuffs
-$router = new \Aura\Sextant\Router();
-$router->setDefaultConditionFactory(new \Aura\Sextant\ConditionFactory\Simple())
-       ->setDefaultActionFactory(new \Aura\Sextant\ActionFactory\Script());
+$router = new \AuraSidera\Sextant\Router();
+$router->setConditionFactory(new \AuraSidera\Sextant\ConditionFactory\Simple())
+       ->setActionFactory(new \AuraSidera\Sextant\ActionFactory\Script());
 
 // Declares routes
 $router->addRoute(['GET', '/'], 'homepage.php')
        ->addRoute(['GET', 'users/{id}'], 'user.php')
-       ->addRoute(['GET', 'users/{id}/activities/{from:date}/{to:date}'], 'user_activities.php']
-       ->setDefaultAction(new \Aura\Sextant\ActionFactory\NotFound());
+       ->addRoute(['GET', 'users/{id}/activities/{from:date}/{to:date}'], 'user_activities.php')
+       ->setDefaultAction(new \AuraSidera\Sextant\ActionFactory\NotFound());
+
+// Reads request state
+$state = \AuraSidera\Sextant\State::getStateFromServer();
 
 // Gets the job done!
 $router->match()
@@ -67,35 +74,35 @@ To get the most out of Sextant you need some knowledge about the system. Be sure
 Using default factories is cool, but sometimes you just need more flexibility. That's fine: you can still set default factories, but override them with specific ones for some routers. Suppose you are fine with the behavior of the `ConditionFactory\Simple` most of the time, but you want an action to be performed for a specific URL pattern regardless of condition: you can use the basic usage example and add:
 
 ```php
-$url_pattern_condition = new \Aura\ConditionFactory\UrlPattern();
+$url_pattern_condition = new \AuraSidera\ConditionFactory\UrlPattern();
 ...
 $router->addRoute($url_pattern_condition('respond-to-any-method'), 'script.php');
 ```
 And it goes similar for actions, suppose you want to show a JSON document:
 
 ```php
-$json_action = new \Aura\ActionFactory\Json();
+$json_action = new \AuraSidera\ActionFactory\Json();
 ...
 $router->addRoute(['GET', 'my-json'], $json_action('path-to-json.json'));
 ```
 Guess what? You can mix conditions and actions:
 
 ```php
-$url_pattern_condition = new \Aura\ConditionFactory\UrlPattern();
-$json_action = new \Aura\ActionFactory\Json();
+$url_pattern_condition = new \AuraSidera\ConditionFactory\UrlPattern();
+$json_action = new \AuraSidera\ActionFactory\Json();
 ...
 $router->addRoute($url_pattern_condition('respond-to-any-method'), $json_action('path-to-json.json'));
 ```
-This becomes more verbose: that's the tradeoff between being concise and being flexible.
+This becomes more verbose: that's the trade-off between being concise and being flexible.
 
 Sextant provides some ready-to-use condition and action factories you can play around with. If you want to go even further, you can play around with *meta conditions*: they are special conditions which allows to build arbitrarily complex, boolean-based conditions. Take this purposely over-complicated condition:
 
 ```php
-$method = new \Aura\ConditionFactory\Method();
-$url = new \Aura\ConditionFactory\UrlPattern();
-$and = new \Aura\ConditionFactory\Conjunction();
-$or = new \Aura\ConditionFactory\Disjunction();
-$not = new \Aura\ConditionFactory\Negation();
+$method = new \AuraSidera\ConditionFactory\Method();
+$url = new \AuraSidera\ConditionFactory\UrlPattern();
+$and = new \AuraSidera\ConditionFactory\Conjunction();
+$or = new \AuraSidera\ConditionFactory\Disjunction();
+$not = new \AuraSidera\ConditionFactory\Negation();
 ...
 $route->addRoute(
     $and(
@@ -120,45 +127,78 @@ Why should you? I see, you are *that* type of person...
 
 You can define your own conditions and actions. Bear in my the following mantra:
 
-    condition: (URL: string, method: string , parameters: array[string => string], headers: array[string => string], &matches: array[string => string]) => bool
-    action: (matches: array[string => string], parameters: array[string => string], headers: array[string => string], URL: string, method: string) => nothing
+    condition: State => bool
+    action: State => nothing
 When implementing custom actions or conditions, match those types and you will be fine. You can use functions, anonymous functions, closure or callable objects (implementing the `__invoke` magic method). Here's an example:
 
-    $router->addRoute(
-        function ($url, $method, $parameters, $headers, &$matches) {
-            if ($url == 'X') {
-                $matches['X'] = 42;
-                return true;
-            }
-            else {
-                return count($parameters) < count($headers);
-            }
-        },
-        function ($matches, $parameters, $headers, $url, $method) {
-            echo "This is then URL: " . $url . "<br>";
-            echo "And these are the matches I got: ";
-            print_r($matches);
+```php
+$router->addRoute(
+    function (\AuraSidera\Sextant\State $state) {
+        if ($state->getUrl() == 'X') {
+            $state->addMatch('X') = 42;
+            return true;
         }
-    );
+        else {
+            return count($state->getParametersAsDictionary()) < count($state->getHeadersAsDictionary());
+        }
+    },
+    function (\AuraSidera\Sextant\Sate $state) {
+        echo "This is the URL: " . $state->getUrl() . "<br>";
+        echo "And these are the matches I got: ";
+        print_r($state->getMatchesAsDictionary());
+    }
+);
+```
 Pretty neat, isn't it?
 
 
 # Concepts
 Main concepts in Sextant.
 
-## Conditions
-A condition is any *callable* which returns a boolean. Sextant will automatically pass the following parameters to a condition while testing a route:
- * URL
- * method
- * GET/POST parameters (as associative array)
- * HTTP headers (as associative array)
- * matches, an empty array to be filled with URL matching information (if any)
+## State
 
-Sextant also offers a number of ready-to-use condition in the form of abstract factories, under the `ConditionFactory` namespace. Factories can be instantiated and used in routes as in the following example:
+A state is an object representing current state of the request. State always includes:
+
+* URL
+* method
+* request parameters (GET, POST, ...) as associative array
+* HTTP headers as associative array
+* matches, an associative array filled with URL matching information (with any)
+
+all of which can be retrieved using the appropriate getter method. A state can be automatically read from server by using the helper static factory method `getStateFromServer`:
 
 ```php
+$state = \AuraSidera\Sextant\State::getStateFromServer();
+$url = $state->getUrl();
+$method = $state->getMethod();
+$parameters = $state->getParametersAsDictionary();
+$headers = $state->getHeadersAsDictionary();
+$matches = $state->getMatchesAsDictionary();
+```
+
+State can be decorated with named entities, which can be accessed both with member and array access syntax. Trying to read an undefined entity will return `null`:
+
+```php
+$state = \AuraSidera\Sextant\State::getStateFromServer();
+$state->some_name = 42;
+echo $state->some_name;  // Displays 42
+
+echo isset($state->fake) ? 'set' : 'unset';  // Displays 'unset'
+echo $state->fake;  // Displays '' (a null value is print)
+
+$state['other_name'] = 21;  // Array access works too, both for writing...
+echo $state['other_name'];  // ... and reading values
+echo $state->other_name;    // It is fine to mix both styles
+```
+
+
+
+## Conditions
+
+A condition is any *callable* which returns a boolean. Sextant will automatically pass a State testing a route. Sextant also offers a number of ready-to-use condition in the form of abstract factories, under the `ConditionFactory` namespace. Factories can be instantiated and used in routes as in the following example:
+```php
 // Instantiates a condition factory which produces conditions matching methods
-$method_factory = new \Aura\ConditionFactory\Method();
+$method_factory = new \AuraSidera\ConditionFactory\Method();
 
 // Matches only HTTP/GET requests
 $method_condition_get = $method_factory('GET');
@@ -173,7 +213,7 @@ $router->addRoute($method_condition_post, 'action_2');
 It is usually more convenient to use the following, equivalent, more concise and clearer syntax:
 
 ```php
-$method = new \Aura\ConditionFactory\Method();
+$method = new \AuraSidera\ConditionFactory\Method();
 
 $router->addRoute($method('GET'), 'action_1');
 $router->addRoute($method('POST'), 'action_2');
@@ -182,7 +222,7 @@ $router->addRoute($method('POST'), 'action_2');
 Note that, although Sextant uses classes to implement factories which produce conditions, this pattern is not mandatory. It is possible to use any type of function (including anonymous functions, closures and callable objects):
 
 ```php
-function my_condition(string $url, string $method, array $parameters, array $headers, &$matches): bool {
+function my_condition(\AuraSidera\Sextant\State $state): bool {
     return true;
 }
 
@@ -191,18 +231,10 @@ $router->addRoute('my_condition', 'action');
 
 
 ## Actions
-Actions are *callable*, without other particular requirements. They usually produce some type of output in the page, set some headers, manipulate a database, or a mix of those. Sextant will automatically inject the following information when calling an action:
- * matches, array filled with URL matching information (if any), whose structure depends on the condition
- * GET/POST parameters (as associative array)
- * HTTP headers (as associative array)
- * URL
- * method
-
-Sextant has a number of ready-to-use actions, such as a default 404 page setting the appropriate header, a JSON renderer, a file rendered and a script executor. The `ActionFactory` contains such action factories. An action factory is an object building an action, which can be later used in a route:
-
+Actions are *callable*, without other particular requirements. They usually produce some type of output in the page, set some headers, manipulate a database, or a mix of those. Sextant will automatically inject the state when calling an action. Sextant has a number of ready-to-use actions, such as a default 404 page setting the appropriate header, a JSON renderer, a file rendered and a script executor. The `ActionFactory` contains such action factories. An action factory is an object building an action, which can be later used in a route:
 ```php
 // Istantiates an action factory rendering a JSON document
-$json_action_factory = new \Aura\ActionFactory\Json();
+$json_action_factory = new \AuraSidera\ActionFactory\Json();
 
 // Renders a JSON when called
 $json_action = $json_action_factory('path-to-document.json');
@@ -213,7 +245,7 @@ $router->addRoute('condition', $json_action);
 The following equivalent and more concise syntax is preferred:
 
 ```php
-$json = new \Aura\ActionFactory/Json();
+$json = new \AuraSidera\ActionFactory\Json();
 
 $router->addRoute('condition', $json('path-to-document.json'));
 ```
@@ -221,11 +253,14 @@ $router->addRoute('condition', $json('path-to-document.json'));
 Sextant used classed to implement factories which produce actions, but this is not mandatory. Custom functions can be used as well:
 
 ```php
-function my_action(array $matches, array $parameters, array $header, string $url, string $method) {
+function my_action(\AuraSidera\Sextant\State $state) {
     echo "Hello, world!";
+    $state->track = 1;
 }
 ```
 
+Actions are allowed to change named entities associated to `$state`, but cannot modify URL, methods, parameters or headers.
 
 ## Routes
+
 A route is an association between a condition and an action. Routes are declared inside a router, which will eventually try to match them in a given context (URL, method, headers, etc.). First route whose condition is satisfied in the context will be chosen, and its action performed. Routes are tested in the same order they are declared.

@@ -3,9 +3,7 @@
  * Matches an URL pattern and a method.
  */
 namespace AuraSidera\Sextant\ConditionFactory;
-
-require_once __DIR__ . '/UrlPattern.php';
-require_once __DIR__ . '/Method.php';
+use \AuraSidera\Sextant\State;
 
 /**
  * Matches an URL pattern and a method.
@@ -41,15 +39,8 @@ class Simple implements ConditionFactory {
         $method_factory = $this->method;
         $method_condition = $method_factory($method);
 
-        return function (
-            string $url = '',
-            string $method = '',
-            array $parameters = [],
-            array $headers = [],
-            array &$matches = []
-        ) use ($url_condition, $method_condition): bool {
-            return $url_condition($url, $method, $parameters, $headers, $matches)
-                && $method_condition($url, $method);
+        return function (State $state) use ($url_condition, $method_condition): bool {
+            return $url_condition($state) && $method_condition($state);
         };
     }
 }

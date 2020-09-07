@@ -3,8 +3,7 @@
  * Conjunction of conditions.
  */
 namespace AuraSidera\Sextant\ConditionFactory;
-
-require_once __DIR__ . '/ConditionFactory.php';
+use \AuraSidera\Sextant\State;
 
 /**
  * Conjunction of conditions.
@@ -17,15 +16,9 @@ class Conjunction implements ConditionFactory {
      * @return callable Conjunction of conditions
      */
     public function __invoke(callable ...$subjects): callable {
-        return function(
-            string $url = '',
-            string $method = '',
-            array $parameters = [],
-            array $headers = [],
-            array &$matches = []
-        ) use ($subjects): bool {
+        return function(State $state) use ($subjects): bool {
             foreach ($subjects as $subject) {
-                if (!$subject($url, $method, $parameters, $headers, $matches)) {
+                if (!$subject($state)) {
                     return false;
                 }
             }

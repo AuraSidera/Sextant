@@ -3,8 +3,7 @@
  * Shows file contents as action.
  */
 namespace AuraSidera\Sextant\ActionFactory;
-
-require_once __DIR__ . '/ActionFactory.php';
+use \Exception;
 
 /**
  * Shows file contents as action.
@@ -16,11 +15,11 @@ class File implements ActionFactory {
      * @param string $file_path Path to file
      * @param string $header Optional header to set (default: none)
      * @return callable Action outputting content of a file
-     * @throws \Exception If file is not readable
+     * @throws Exception If file is not readable
      */
     public function __invoke(string $file_path = '', string $header = null): callable {
         if (!file_exists($file_path) || !is_readable($file_path)) {
-            throw new \Exception('Cannot access "' . $file_path . '".\n');
+            throw new Exception('Cannot access "' . $file_path . '".\n');
         }
 
         return function () use ($file_path, $header) {

@@ -4,36 +4,33 @@
  */
 namespace AuraSidera\Sextant;
 
-require_once __DIR__ . '/ConditionFactory/Always.php';
-require_once __DIR__ . '/ActionFactory/Nothing.php';
-
 /**
  * Router.
  *
- * Sets routes and dispatches incoming requests. Every route is a pair 
- * (condition, action): given action is taken whenever condition is satisfied.
- * Routes conditions are tested in the same order they are declared.
+ * Allows to declasre routes and dispatch incoming requests. Every route is a
+ * pair (condition, action): given action is taken whenever condition is
+ * satisfied. Routes conditions are tested in the same order they are declared.
  */
 class Router {
     /** array List of declared routes. */
     private $routes;
 
     /** callable Action to take when no other route matches. */
-    private $deafult_action;
+    private $default_action;
 
     /** callable Default condition factory to use when a proper condition is not provied. */
-    private $default_condition_factory;
+    private $condition_factory;
 
     /** callable Default action factory to use when a proper action is not provided. */
-    private $default_action_factory;
+    private $action_factory;
 
 
     /** Default constructor. */
     public function __construct() {
         $this->routes = [];
         $this->default_action = null;
-        $this->default_condition_factory = null;
-        $this->default_action_factory = null;
+        $this->condition_factory = null;
+        $this->action_factory = null;
     }
 
 
@@ -54,10 +51,10 @@ class Router {
         }
 
         // Applies default condition builder, if any
-        if (!is_null($this->default_condition_factory)) {
+        if (!is_null($this->condition_factory)) {
             return call_user_func_array(
-                $this->default_condition_factory,
-                is_array($condition) ? $condition : $condition
+                $this->condition_factory,
+                is_array($condition) ? $condition : [$condition]
             );
         }
 
@@ -83,9 +80,9 @@ class Router {
         }
 
         // Applies default action builder, if any
-        if (!is_null($this->default_action_factory)) {
+        if (!is_null($this->action_factory)) {
             return call_user_func_array(
-                $this->default_action_factory,
+                $this->action_factory,
                 is_array($action) ? $action : [$action]
             );
         }
@@ -115,8 +112,8 @@ class Router {
      * @param callable $condition_factory Condition factory
      * @return self This router
      */
-    public function setDefaultConditionFactory(callable $condition_factory = null): self {
-        $this->default_condition_factory = $condition_factory;
+    public function setConditionFactory(callable $condition_factory = null): self {
+        $this->condition_factory = $condition_factory;
 
         return $this;
     }
@@ -128,8 +125,8 @@ class Router {
      * @param callable $action_factory Action factory
      * @return self This router
      */
-    public function setDefaultActionFactory(callable $action_factory = null): self {
-        $this->default_action_factory = $action_factory;
+    public function setActionFactory(callable $action_factory = null): self {
+        $this->action_factory = $action_factory;
 
         return $this;
     }
@@ -145,7 +142,7 @@ class Router {
     public function addRoute($condition, $action): self {
         $this->routes[] = [
             'condition' => $this->getCondition($condition),
-            'action' => $action = $this->getAction($action)
+            'action' => $this->getAction($action)
         ];
 
         return $this;
@@ -155,63 +152,17 @@ class Router {
     /**
      * Tests routes and takes appropriate action.
      *
-     * @param string $url URL (default: requested URI)
-     * @param string $method Request method (default: requested HTTP method)
-     * @param array $parameters Parameters (default: HTTP GET/POST parameters)
-     * @param array $headers (default: request headers)
+     * @param State $state Request state
      * @return self This router
      */
-    public function match(
-        string $url = null,
-        string $method = null,
-        array $parameters = null,
-        array $headers = null
-    ): self {
-        // Initializes parameters
-        if (is_null($url)) {
-            $url = isset($_SERVER['REQUEST_URI']) ? strtok($_SERVER['REQUEST_URI'], '?') : '';
-        }
-        if (is_null($method)) {
-            $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : '';
-        }
-        if (is_null($parameters)) {
-            $parameters = isset($_REQUEST) ? $_REQUEST : [];
-            if ($method === 'PUT') {
-                $put_parameters = [];
-                parse_str(file_get_contents("php://input"), $put_parameters);
-                $parameters = array_merge($parameters, $put_parameters);
-            }
-        }
-        if (is_null($headers)) {
-            if (function_exists('getallheaders') && getallheaders() !== false) {
-                $headers = getallheaders();
-            }   
-            elseif (isset($_SERVER)) {
-                $headers = [];
-                foreach($_SERVER as $name => $value) {
-                    if ($name != 'HTTP_MOD_REWRITE' && (substr($name, 0, 5) == 'HTTP_' || $name == 'CONTENT_LENGTH' || $name == 'CONTENT_TYPE')) {
-                        $name = str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', str_replace('HTTP_', '', $name)))));
-                        $headers[$name] = $value;
-                    }
-                }
-            }
-            else {
-                $headers = [];
-            }
-        }
-
-        // Tests every route
+    public function match(State $state): self {
         foreach ($this->routes as $route) {
-            $matches = [];
-            if ($route['condition']($url, $method, $parameters, $headers, $matches)) {
-                $route['action']($matches, $parameters, $headers, $url, $method);
+            if ($route['condition']($state)) {
+                $route['action']($state);
                 return $this;
             }
         }
-
-        $default_action = $this->getAction($this->default_action);
-        $default_action([], $parameters, $headers, $url, $method);
-
+        ($this->default_action)($state);
         return $this;
     }
 }

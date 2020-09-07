@@ -3,8 +3,7 @@
  * Sequential composition of actions.
  */
 namespace AuraSidera\Sextant\ActionFactory;
-
-require_once __DIR__ . '/ActionFactory.php';
+use \AuraSidera\Sextant\State;
 
 /**
  * Sequential composition of actions.
@@ -17,16 +16,9 @@ class Sequential implements ActionFactory {
      * @return callable Sequence of actions
      */
     public function __invoke(callable ...$subjects): callable {
-        return function (
-            array &$matches = [],
-            array &$parameters = [],
-            array &$headers = [],
-            string &$url = '',
-            string &$method = '',
-            &$status = null
-        ) use ($subjects) {
+        return function (State $state) use ($subjects) {
             foreach ($subjects as $subject) {
-                $subject($matches, $parameters, $headers, $url, $method, $status);
+                $subject($state);
             }
         };
     }

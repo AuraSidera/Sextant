@@ -3,8 +3,7 @@
  * Executes a script.
  */
 namespace AuraSidera\Sextant\ActionFactory;
-
-require_once __DIR__ . '/ActionFactory.php';
+use \Exception;
 
 /**
  * Executes a script.
@@ -19,17 +18,10 @@ class Script implements ActionFactory {
      */
     public function __invoke(string $file_path = ''): callable {
         if (!file_exists($file_path) || !is_readable($file_path)) {
-            throw new \Exception('Cannot access "' . $file_path . '".\n');
+            throw new Exception('Cannot access "' . $file_path . '".\n');
         }
 
-        return function (
-            array &$matches = [],
-            array &$parameters = [],
-            array &$headers = [],
-            string &$url = '',
-            string &$method = '',
-            &$status = null
-        ) use ($file_path) {
+        return function () use ($file_path) {
             include $file_path;
         };
     }

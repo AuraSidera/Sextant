@@ -3,8 +3,7 @@
  * Negation of a condition.
  */
 namespace AuraSidera\Sextant\ConditionFactory;
-
-require_once __DIR__ . '/ConditionFactory.php';
+use \AuraSidera\Sextant\State;
 
 /**
  * Negation of a condition.
@@ -17,15 +16,9 @@ class Negation implements ConditionFactory {
      * @return callable Negation of given condition
      */
     public function __invoke(callable $subject = null): callable {
-        return function(
-            string $url = '',
-            string $method = '',
-            array $parameters = [],
-            array $headers = [],
-            array &$matches = []
-        ) use ($subject): bool {
+        return function(State $state) use ($subject): bool {
             return (!is_null($subject))
-                 ? !$subject($url, $method, $parameters, $headers, $matches)
+                 ? !$subject($state)
                  : false;
         };
     }

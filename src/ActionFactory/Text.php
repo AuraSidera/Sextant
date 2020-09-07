@@ -4,8 +4,6 @@
  */
 namespace AuraSidera\Sextant\ActionFactory;
 
-require_once __DIR__ . '/ActionFactory.php';
-
 /**
  * Outputs a string.
  */

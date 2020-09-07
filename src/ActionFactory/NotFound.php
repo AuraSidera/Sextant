@@ -4,8 +4,6 @@
  */
 namespace AuraSidera\Sextant\ActionFactory;
 
-require_once __DIR__ . '/ActionFactory.php';
-
 /**
  * Sets a file not found header.
  */
@@ -17,7 +15,7 @@ class NotFound implements ActionFactory {
      */
     public function __invoke(): callable {
         return function () {
-            header($_SERVER["SERVER_PROTOCOL"]." 404 Not Found"); 
+            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
         };
     }
 }

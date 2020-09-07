@@ -3,8 +3,7 @@
  * Conditional branching.
  */
 namespace AuraSidera\Sextant\ActionFactory;
-
-require_once __DIR__ . '/ActionFactory.php';
+use \AuraSidera\Sextant\State;
 
 /**
  * Conditional branching.
@@ -23,21 +22,14 @@ class IfThenElse implements ActionFactory {
         callable $then = null,
         callable $else = null
     ): callable {
-        return function (
-            array &$matches = [],
-            array &$parameters = [],
-            array &$headers = [],
-            string &$url = '',
-            string &$method = '',
-            &$status = null
-        ) use ($condition, $then, $else) {
-            if (is_null($condition) || $condition($matches, $parameters, $headers, $url, $method, $status)) {
+        return function (State $state) use ($condition, $then, $else) {
+            if (is_null($condition) || $condition($state)) {
                 if (!is_null($then)) {
-                    $then($matches, $parameters, $headers, $url, $method, $status);
+                    $then($state);
                 }
             }
             elseif (!is_null($then)) {
-                $else($matches, $parameters, $headers, $url, $method, $status);
+                $else($state);
             }
         };
     }
