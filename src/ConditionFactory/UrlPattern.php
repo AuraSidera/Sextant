@@ -78,9 +78,8 @@ class UrlPattern implements ConditionFactory {
                 throw new Exception('Error while trying to match "'. $state->getUrl() . '" againts pattern "' . $processed_pattern . '".');
             }
 
-            $matches = [];
             for ($i = 1; $i < \count($local_matches); ++$i) {
-                $matches[$placeholders[$i - 1]] = $local_matches[$i];
+                $state->addMatch($placeholders[$i - 1], $local_matches[$i]);
             }
 
             return $result === 1;
