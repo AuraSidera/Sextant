@@ -40,9 +40,17 @@ class Server {
      */
     public function getParameters(): array {
         $parameters = isset($_REQUEST) ? $_REQUEST : [];
-        $body_parameters = [];
-        parse_str(file_get_contents("php://input"), $body_parameters);
-        $parameters = array_merge($parameters, $body_parameters);
+        if (isset($_SERVER['CONTENT_TYPE'])) {
+            $body_parameters = [];
+            $content_type = strtolower($_SERVER['CONTENT_TYPE']);
+            if (strpos($content_type, 'application/json') === 0) {
+                $body_parameters = json_decode(file_get_contents("php://input"), true);
+            }
+            elseif (strpos($content_type, 'application/x-www-form-urlencoded') === 0) {
+                parse_str(file_get_contents("php://input"), $body_parameters);
+            }
+            $parameters = array_merge($parameters, $body_parameters);
+        }
         return $parameters;
     }
 
