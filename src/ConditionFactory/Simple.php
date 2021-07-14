@@ -36,7 +36,7 @@ class Simple implements ConditionFactoryInterface {
      * @return self Simple factory
      */
     public static function fromDefault(): self {
-        return newSimple(new UrlPattern(), new Method());
+        return new Simple(new UrlPattern(), new Method());
     }
 
     /**
