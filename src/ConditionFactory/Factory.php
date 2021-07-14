@@ -95,6 +95,6 @@ class Factory {
      * @return Simple Action factory
      */
     public function createSimple(): Simple {
-        return new Simple();
+        return Simple::fromDefault();
     }
 }
