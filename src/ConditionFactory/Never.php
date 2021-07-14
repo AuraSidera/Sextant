@@ -7,7 +7,7 @@ namespace AuraSidera\Sextant\ConditionFactory;
 /**
  * A condition which is never satisfied.
  */
-class Never implements ConditionFactory {
+class Never implements ConditionFactoryInterface {
     /**
      * Returns a condition which is never satisfied.
      *

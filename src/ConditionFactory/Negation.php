@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Negation of a condition.
  */
-class Negation implements ConditionFactory {
+class Negation implements ConditionFactoryInterface {
     /**
      * Returns a condition which is the negation of another condition.
      *

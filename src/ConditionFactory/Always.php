@@ -7,7 +7,7 @@ namespace AuraSidera\Sextant\ConditionFactory;
 /**
  * Always satisfied condition.
  */
-class Always implements ConditionFactory {
+class Always implements ConditionFactoryInterface {
     /**
      * Returns a condition which is always satisfied.
      *

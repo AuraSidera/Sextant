@@ -7,7 +7,7 @@ namespace AuraSidera\Sextant\ActionFactory;
 /**
  * Outputs a string.
  */
-class Text implements ActionFactory {
+class Text implements ActionFactoryInterface {
     /**
      * Returns an action outputting a string.
      *

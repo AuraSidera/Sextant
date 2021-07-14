@@ -81,7 +81,7 @@ final class StateTest extends TestCase {
         $this->assertFalse(isset($state['name']));
     }
 
-    public function testGetStateFromServer() {
+    public function testGetStateFromDefault() {
         $_SERVER = [
             'REQUEST_URI' => 'http://www.site.com',
             'REQUEST_METHOD' => 'get',
@@ -92,7 +92,7 @@ final class StateTest extends TestCase {
             'string' => 'fourtytwo',
             'array' => ['a', 'b', 'c']
         ];
-        $state = State::getStateFromServer();
+        $state = State::fromDefault();
         $this->assertEquals($this->initState(), $state);
     }
 
@@ -108,7 +108,9 @@ final class StateTest extends TestCase {
             ],
             [
                 'X-customheader' => 42
-            ]
+            ],
+            [],
+            []
         );
     }
 }

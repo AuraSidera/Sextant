@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Disjunction of conditions.
  */
-class Disjunction implements ConditionFactory {
+class Disjunction implements ConditionFactoryInterface {
     /**
      * Returns a condition which is satisfied when at least one subject is satisfied.
      *

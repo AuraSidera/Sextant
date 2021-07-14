@@ -7,7 +7,7 @@ namespace AuraSidera\Sextant\ActionFactory;
 /**
  * Does nothing.
  */
-class Nothing implements ActionFactory {
+class Nothing implements ActionFactoryInterface {
     /**
      * Returns an action which does nothing.
      *

@@ -12,6 +12,15 @@ namespace AuraSidera\Sextant;
  */
 class Server {
     /**
+     * Static factory method.
+     * 
+     * @return Server Server
+     */
+    public static function fromDefault(): self {
+        return new Server();
+    }
+    
+    /**
      * Returns URL.
      *
      * @return string URL

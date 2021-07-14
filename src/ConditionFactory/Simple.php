@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Matches an URL pattern and a method.
  */
-class Simple implements ConditionFactory {
+class Simple implements ConditionFactoryInterface {
     /** UrlPattern URL pattern condition factory. */
     private $url_pattern;
 
@@ -16,12 +16,28 @@ class Simple implements ConditionFactory {
     private $method;
 
 
-    /** Default constructor. */
-    public function __construct() {
-        $this->url_pattern = new UrlPattern();
-        $this->method = new Method();
+    /**
+     * Constructor.
+     * 
+     * @param UrlPattern $url_pattern URL pattern factory
+     * @param Method $method Method factory
+     */
+    public function __construct(
+        UrlPattern $url_pattern,
+        Method $method
+    ) {
+        $this->url_pattern = $url_pattern;
+        $this->method = $method;
     }
 
+    /**
+     * Static factory method
+     * 
+     * @return self Simple factory
+     */
+    public static function fromDefault(): self {
+        return newSimple(new UrlPattern(), new Method());
+    }
 
     /**
      * Returns a condition satisfied when URL matches a pattern for a specific method.

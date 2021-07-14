@@ -8,7 +8,7 @@ use \Exception;
 /**
  * Executes a script.
  */
-class Script implements ActionFactory {
+class Script implements ActionFactoryInterface {
     /**
      * Returns an action executing a script.
      *

@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Conjunction of conditions.
  */
-class Conjunction implements ConditionFactory {
+class Conjunction implements ConditionFactoryInterface {
     /**
      * Returns a condiction which is satisfied when every subject is satisfied.
      *

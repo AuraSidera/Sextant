@@ -9,7 +9,7 @@ use \Exception;
 /**
  * Condition based on a PCRE on URL.
  */
-class Pcre implements ConditionFactory {
+class Pcre implements ConditionFactoryInterface {
     /**
      * Returns a condition which is satisfied if and only if URL matches a given pattern.
      *
@@ -28,7 +28,6 @@ class Pcre implements ConditionFactory {
             for ($i = 0; $i < \count($matches); ++$i) {
                 $state->addMatch($i, $matches[$i]);
             }
-
             return $result === 1;
         };
     }

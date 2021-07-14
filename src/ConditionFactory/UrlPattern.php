@@ -22,7 +22,7 @@ use \Exception;
  * - time: time in hh:mm:ss format
  * - datetime: date and time in YYYY-MM-DD hh:mm:ss format
  */
-class UrlPattern implements ConditionFactory {
+class UrlPattern implements ConditionFactoryInterface {
     /**
      * Returns PCRE matching given type.
      *
@@ -40,7 +40,6 @@ class UrlPattern implements ConditionFactory {
 
         return (array_key_exists($type_name, $types)) ? $types[$type_name] : $types['string'];
     }
-
 
     /**
      * Returns a condition satisfied when URL matches a pattern.

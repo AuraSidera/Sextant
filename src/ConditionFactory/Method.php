@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Matches a method.
  */
-class Method implements ConditionFactory {
+class Method implements ConditionFactoryInterface {
     /**
      * Returns a condition matching a method.
      *

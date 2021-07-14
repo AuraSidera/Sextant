@@ -16,7 +16,8 @@ namespace AuraSidera\Sextant\ActionFactory;
  * 
  * and returns nothing.
  */
-interface ActionFactory {
+interface ActionFactoryInterface
+ {
     /**
      * Returns an action.
      *

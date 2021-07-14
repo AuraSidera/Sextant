@@ -3,7 +3,6 @@
  * Surrent state.
  */
 namespace AuraSidera\Sextant;
-
 use \ArrayAccess;
 
 /**
@@ -43,19 +42,23 @@ class State implements ArrayAccess {
      * @param string $method Request method
      * @param array $parameters Parameters
      * @param array $headers Headers
+     * @param array $matches Dictionary of matches
+     * @param array $data Dictionary of named entities
      */
     public function __construct(
         string $url,
         string $method,
         array $parameters,
-        array $headers
+        array $headers,
+        array $matches,
+        array $data
     ) {
         $this->url = $url;
         $this->method = strtoupper($method);
         $this->parameters = $parameters;
         $this->headers = $headers;
-        $this->matches = [];
-        $this->data = [];
+        $this->matches = $matches;
+        $this->data = $data;
     }
 
     /**
@@ -64,26 +67,29 @@ class State implements ArrayAccess {
      * Reads URL, method, parameters and headers from server information. All
      * of them can be overwritten by passing a non null parameter.
      *
-     * @param  string $url URL
-     * @param  string $method Request method
-     * @param  array $parameters Dictionary of Parameters
-     * @param  array $headers Headers
+     * @param Server Server
      * @return State State
      */
-    public static function getStateFromServer(
-        string $url = null,
-        string $method = null,
-        array $parameters = null,
-        array $headers = null
-    ): State {
-        $server = new Server();
-        $state = new State(
-            !is_null($url) ? $url : $server->getUrl(),
-            !is_null($method) ? $url : $server->getMethod(),
-            !is_null($parameters) ? $url : $server->getParameters(),
-            !is_null($headers) ? $url : $server->getHeaders()
+    public static function fromServer(Server $server): State {
+        return new State(
+            $server->getUrl(),
+            $server->getMethod(),
+            $server->getParameters(),
+            $server->getHeaders(),
+            [],
+            []
         );
-        return $state;
+    }
+
+    /**
+     * Static factory method.
+     * 
+     * Reads information from a default server.
+     * 
+     * @return State State
+     */
+    public static function fromDefault(): State {
+        return self::fromServer(Server::fromDefault());
     }
 
     /**

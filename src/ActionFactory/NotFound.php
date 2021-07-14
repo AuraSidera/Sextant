@@ -7,7 +7,7 @@ namespace AuraSidera\Sextant\ActionFactory;
 /**
  * Sets a file not found header.
  */
-class NotFound implements ActionFactory {
+class NotFound implements ActionFactoryInterface {
     /**
      * Returns an action which sets a file not found header.
      *

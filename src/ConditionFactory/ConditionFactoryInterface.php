@@ -17,7 +17,7 @@ namespace AuraSidera\Sextant\ConditionFactory;
  * also accepts an array which will be filled with part of the URL matching
  * an expression (if the condition's nature supports it), as in a preg_match.
  */
-interface ConditionFactory {
+interface ConditionFactoryInterface {
     /**
      * Returns a condition.
      *

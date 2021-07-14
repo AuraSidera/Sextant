@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Conditional branching.
  */
-class IfThenElse implements ActionFactory {
+class IfThenElse implements ActionFactoryInterface {
     /**
      * Returns a conditional action.
      *

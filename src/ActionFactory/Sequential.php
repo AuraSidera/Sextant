@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Sequential composition of actions.
  */
-class Sequential implements ActionFactory {
+class Sequential implements ActionFactoryInterface {
     /**
      * Returns an action which is the sequential composition of given actions.
      *

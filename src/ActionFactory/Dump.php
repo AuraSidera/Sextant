@@ -9,7 +9,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Dump of current status.
  */
-class Dump implements ActionFactory {
+class Dump implements ActionFactoryInterface {
     /**
      * Dumps current status.
      */

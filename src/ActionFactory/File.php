@@ -8,7 +8,7 @@ use \Exception;
 /**
  * Shows file contents as action.
  */
-class File implements ActionFactory {
+class File implements ActionFactoryInterface {
     /**
      * Returns an action outputting the content of given file.
      *

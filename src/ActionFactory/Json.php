@@ -15,7 +15,7 @@ class Json implements ActionFactory {
      * @return callable Action outputting a JSON document
      */
     public function __invoke($subject = []): callable {
-        return function () use ($subject, $set_header) {
+        return function () use ($subject) {
             header('Content-Type: application/json;');
             echo json_encode($subject);
         };

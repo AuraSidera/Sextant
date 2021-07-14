@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * While loop of actions.
  */
-class WhileLoop implements ActionFactory {
+class WhileLoop implements ActionFactoryInterface {
     /**
      * Returns an action which is iterated as long as a condition is true.
      *

@@ -8,7 +8,7 @@ use \AuraSidera\Sextant\State;
 /**
  * Matches an URL.
  */
-class Url implements ConditionFactory {
+class Url implements ConditionFactoryInterface {
     /**
      * Returns a condition matching an URL.
      *
