@@ -51,7 +51,7 @@ class SmartRouter extends Router {
         callable $condition_factory,
         callable $action_factory,
         callable $default_action
-    ) {
+    ): self {
         return new SmartRouter(
             [],
             $condition_factory,
@@ -70,7 +70,7 @@ class SmartRouter extends Router {
      * @param mixed $action Action to take
      * @return self This router
      */
-    public function add($condition, $action): self {
+    public function add($condition, $action): Router {
         parent::add($this->getCondition($condition), $this->getAction($action));
         return $this;
     }
