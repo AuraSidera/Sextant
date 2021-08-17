@@ -31,7 +31,7 @@ class Controller implements ActionFactoryInterface {
     ): callable {
         $full_name = $this->namespace . '\\' . $controller_name;
         return function (State $state) use ($full_name, $method_name) {
-            $controller = new $full_name();
+            $controller = new $full_name($state);
             if (!is_null($method_name)) {
                 $controller->$method_name($state);
                 return;
