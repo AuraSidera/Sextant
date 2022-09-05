@@ -54,6 +54,9 @@ class Server {
             $content_type = strtolower($_SERVER['CONTENT_TYPE']);
             if (strpos($content_type, 'application/json') === 0) {
                 $body_parameters = json_decode(file_get_contents("php://input"), true);
+		if (is_null($body_parameters)) {
+                    $body_parameters = [];
+                }
             }
             elseif (strpos($content_type, 'application/x-www-form-urlencoded') === 0) {
                 parse_str(file_get_contents("php://input"), $body_parameters);
