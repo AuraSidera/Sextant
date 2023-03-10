@@ -7,7 +7,7 @@ namespace AuraSidera\Sextant\ActionFactory;
 /**
  * Shows a JSON document.
  */
-class Json implements ActionFactory {
+class Json implements ActionFactoryInterface {
     /**
      * Returns an action outputting a JSON document.
      *
