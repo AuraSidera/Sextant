@@ -78,7 +78,7 @@ class UrlPattern implements ConditionFactoryInterface {
             }
 
             for ($i = 1; $i < \count($local_matches); ++$i) {
-                $state->addMatch($placeholders[$i - 1], $local_matches[$i]);
+                $state->addMatch($placeholders[$i - 1], rawurldecode($local_matches[$i]));
             }
 
             return $result === 1;
