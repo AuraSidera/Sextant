@@ -22,7 +22,7 @@ class Factory {
      * 
      * @return IfThen Action factory
      */
-    public function createIfThen(): IfThens {
+    public function createIfThen(): IfThen {
         return new IfThen();
     }
 

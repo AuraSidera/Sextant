@@ -18,12 +18,22 @@ class Factory {
     }
 
     /**
-     * Returns a never action factory.
-     * 
-     * @return Never Action factory
+     * Returns an unsatisfiable condition factory.
+     *
+     * @return Unsatisfiable Condition factory
      */
-    public function createNever(): Never {
-        return new Never();
+    public function createUnsatisfiable(): Unsatisfiable {
+        return new Unsatisfiable();
+    }
+
+    /**
+     * Returns an unsatisfiable condition factory.
+     *
+     * @deprecated Use createUnsatisfiable() instead
+     * @return Unsatisfiable Condition factory
+     */
+    public function createNever(): Unsatisfiable {
+        return $this->createUnsatisfiable();
     }
 
     /**

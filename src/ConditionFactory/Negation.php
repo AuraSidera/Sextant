@@ -15,7 +15,7 @@ class Negation implements ConditionFactoryInterface {
      * @param callable $subject Original condition
      * @return callable Negation of given condition
      */
-    public function __invoke(callable $subject = null): callable {
+    public function __invoke(?callable $subject = null): callable {
         return function(State $state) use ($subject): bool {
             return (!is_null($subject))
                  ? !$subject($state)

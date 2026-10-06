@@ -15,7 +15,8 @@ class NotFound implements ActionFactoryInterface {
      */
     public function __invoke(): callable {
         return function () {
-            header($_SERVER['SERVER_PROTOCOL'] . ' 404 Not Found');
+            $protocol = $_SERVER['SERVER_PROTOCOL'] ?? 'HTTP/1.1';
+            header($protocol . ' 404 Not Found');
         };
     }
 }

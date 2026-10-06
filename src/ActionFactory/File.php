@@ -17,9 +17,9 @@ class File implements ActionFactoryInterface {
      * @return callable Action outputting content of a file
      * @throws Exception If file is not readable
      */
-    public function __invoke(string $file_path = '', string $header = null): callable {
+    public function __invoke(string $file_path = '', ?string $header = null): callable {
         if (!file_exists($file_path) || !is_readable($file_path)) {
-            throw new Exception('Cannot access "' . $file_path . '".\n');
+            throw new Exception('Cannot access "' . $file_path . '".');
         }
 
         return function () use ($file_path, $header) {

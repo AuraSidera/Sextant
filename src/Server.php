@@ -54,7 +54,7 @@ class Server {
             $content_type = strtolower($_SERVER['CONTENT_TYPE']);
             if (strpos($content_type, 'application/json') === 0) {
                 $body_parameters = json_decode(file_get_contents("php://input"), true);
-		if (is_null($body_parameters)) {
+                if (!is_array($body_parameters)) {
                     $body_parameters = [];
                 }
             }

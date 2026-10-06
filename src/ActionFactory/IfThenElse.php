@@ -18,9 +18,9 @@ class IfThenElse implements ActionFactoryInterface {
      * @return callable Conditional action
      */
     public function __invoke(
-        callable $condition = null,
-        callable $then = null,
-        callable $else = null
+        ?callable $condition = null,
+        ?callable $then = null,
+        ?callable $else = null
     ): callable {
         return function (State $state) use ($condition, $then, $else) {
             if (is_null($condition) || $condition($state)) {
@@ -28,7 +28,7 @@ class IfThenElse implements ActionFactoryInterface {
                     $then($state);
                 }
             }
-            elseif (!is_null($then)) {
+            elseif (!is_null($else)) {
                 $else($state);
             }
         };

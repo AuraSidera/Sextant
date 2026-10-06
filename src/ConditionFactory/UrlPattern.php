@@ -29,7 +29,7 @@ class UrlPattern implements ConditionFactoryInterface {
      * @param string $type_name Name of the type
      * @return string PCRE expression matching given type
      */
-    public static function typePattern(string $type_name = null) {
+    public static function typePattern(?string $type_name = null): string {
         $types = [
             'number' => '\d+',
             'string' => '[^\/]+',
@@ -38,7 +38,7 @@ class UrlPattern implements ConditionFactoryInterface {
             'datetime' => '\d{4}-\d{1,2}-\d{1,2} \d{1,2}:\d{2}:\d{2}'
         ];
 
-        return (array_key_exists($type_name, $types)) ? $types[$type_name] : $types['string'];
+        return $types[$type_name ?? ''] ?? $types['string'];
     }
 
     /**

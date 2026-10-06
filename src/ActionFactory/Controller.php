@@ -26,8 +26,8 @@ class Controller implements ActionFactoryInterface {
      * @return callable Action calling a controller
      */
     public function __invoke(
-        string $controller_name = null,
-        string $method_name = null
+        ?string $controller_name = null,
+        ?string $method_name = null
     ): callable {
         $full_name = $this->namespace . '\\' . $controller_name;
         return function (State $state) use ($full_name, $method_name) {

@@ -17,8 +17,8 @@ class IfThen implements ActionFactoryInterface {
      * @return callable Conditional action
      */
     public function __invoke(
-        callable $condition = null,
-        callable $then = null
+        ?callable $condition = null,
+        ?callable $then = null
     ): callable {
         return function (State $state) use ($condition, $then) {
             if (!is_null($then) && (is_null($condition) || $condition($state))) {

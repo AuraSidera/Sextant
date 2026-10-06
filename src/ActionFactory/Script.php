@@ -18,7 +18,7 @@ class Script implements ActionFactoryInterface {
      */
     public function __invoke(string $file_path = ''): callable {
         if (!file_exists($file_path) || !is_readable($file_path)) {
-            throw new Exception('Cannot access "' . $file_path . '".\n');
+            throw new Exception('Cannot access "' . $file_path . '".');
         }
 
         return function () use ($file_path) {

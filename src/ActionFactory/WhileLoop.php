@@ -17,8 +17,8 @@ class WhileLoop implements ActionFactoryInterface {
      * @return callable While loop of action
      */
     public function __invoke(
-        callable $condition = null,
-        callable $action = null
+        ?callable $condition = null,
+        ?callable $action = null
     ): callable {
         return function (State $state) use ($condition, $action) {
             while (

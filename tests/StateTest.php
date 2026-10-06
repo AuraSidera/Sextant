@@ -81,6 +81,16 @@ final class StateTest extends TestCase {
         $this->assertFalse(isset($state['name']));
     }
 
+    public function testAppendArray() {
+        $state = $this->initState();
+        $state[] = 'first';
+        $state[] = 'second';
+        $this->assertEquals(
+            ['first', 'second'],
+            $state->getNamedEntitiesAsDictionary()
+        );
+    }
+
     public function testGetStateFromDefault() {
         $_SERVER = [
             'REQUEST_URI' => 'http://www.site.com',

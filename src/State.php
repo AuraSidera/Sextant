@@ -164,7 +164,7 @@ class State implements ArrayAccess {
      * @param  mixed $offset Name
      * @return bool True if and only if entity is defined
      */
-    public function offsetExists($offset): bool {
+    public function offsetExists(mixed $offset): bool {
         return isset($this->data[$offset]);
     }
 
@@ -184,7 +184,7 @@ class State implements ArrayAccess {
      * @note Any undefined entity has a null value
      * @param mixed $offset Name
      */
-    public function offsetGet($offset) {
+    public function offsetGet(mixed $offset): mixed {
         return isset($this->data[$offset]) ? $this->data[$offset] : null;
     }
 
@@ -194,17 +194,22 @@ class State implements ArrayAccess {
      * @note Any undefined entity has a null value
      * @param string $name Name
      */
-    public function __get(string $name) {
+    public function __get(string $name): mixed {
         return isset($this->data[$name]) ? $this->data[$name] : null;
     }
 
     /**
      * Sets value of a named entity.
      *
+     * @note A null offset appends the value, as in $state[] = $value
      * @param mixed $offset Name
      * @param mixed $value Value
      */
-    public function offsetSet($offset, $value) {
+    public function offsetSet(mixed $offset, mixed $value): void {
+        if (is_null($offset)) {
+            $this->data[] = $value;
+            return;
+        }
         $this->data[$offset] = $value;
     }
 
@@ -214,7 +219,7 @@ class State implements ArrayAccess {
      * @param string $name Name
      * @param mixed $value Value
      */
-    public function __set(string $name, $value) {
+    public function __set(string $name, mixed $value): void {
         $this->data[$name] = $value;
     }
 
@@ -223,7 +228,7 @@ class State implements ArrayAccess {
      *
      * @param mixed $offset Name
      */
-    public function offsetUnset($offset) {
+    public function offsetUnset(mixed $offset): void {
         unset($this->data[$offset]);
     }
 
@@ -232,7 +237,7 @@ class State implements ArrayAccess {
      *
      * @param string $name Name
      */
-    public function __unset(string $name) {
+    public function __unset(string $name): void {
         unset($this->data[$name]);
     }
 }

@@ -14,12 +14,16 @@ You can define a default action to perform when no route matches (useful for cus
 Sextant can be installed through [Composer](https://getcomposer.org/), although manual installation is available as well.
 
 ## Requirements
-    php>= 7.0.0
+    php >= 8.1
 
 ## Composer
-Add `aura/sextant` to your `composer.json` file, or run:
+Add `aurasidera/sextant` to your `composer.json` file, or run:
 
-    composer require aura/sextant
+    composer require aurasidera/sextant
+
+## Upgrading to 4.0
+* PHP 8.1 or newer is required.
+* `ConditionFactory\Never` has been renamed to `ConditionFactory\Unsatisfiable`, since `never` is a reserved word since PHP 8.1. `ConditionFactory\Factory::createNever()` is kept as a deprecated alias of `createUnsatisfiable()`.
 
 ## Manual
 Clone or download this repository:
